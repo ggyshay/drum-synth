@@ -7,22 +7,22 @@ class Hat : public InstrumentI
 public:
   Hat(float _decay)
   {
-    Value frequencyValue(30.0, 200.0, 40.0, "TOM", 100);
+    Value frequencyValue(30.0, 200.0, 40.0, "TOM", 100, true);
     values.push_back(frequencyValue);
 
-    Value decayValue(2.0, 1000.0, 100.0, "DURACAO", 100);
+    Value decayValue(2.0, 1000.0, 100.0, "DURACAO", 100, true);
     values.push_back(decayValue);
 
-    Value highpassValue(200.0, 10000.0, 7000.0, "HIGH PASS", 100);
+    Value highpassValue(200.0, 10000.0, 7000.0, "HIGH PASS", 100, true);
     values.push_back(highpassValue);
 
-    Value bandpassValue(200.0, 10000.0, 10000.0, "BAND PASS", 100);
+    Value bandpassValue(200.0, 10000.0, 10000.0, "BAND PASS", 100, true);
     values.push_back(bandpassValue);
 
     Value noiseValue(0.0, 3.0, 0.9, "NOISE", 30);
     values.push_back(noiseValue);
 
-    Value attackValue(2.0, 100.0, 2.0, "ATAQUE", 98);
+    Value attackValue(2.0, 100.0, 2.0, "ATAQUE", 98, true);
     values.push_back(attackValue);
 
     Value indexValue(0, 4, 0, "INDICE", 4);

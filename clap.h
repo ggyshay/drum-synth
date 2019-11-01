@@ -8,19 +8,19 @@ class Clap : public InstrumentI
 public:
   Clap()
   {
-    Value attackValue(2.0, 200.0, 2.0, "ATAQUE");
+    Value attackValue(2.0, 200.0, 2.0, "ATAQUE", 100, true);
     values.push_back(attackValue);
 
-    Value decayValue(2.0, 1000.0, 300.0, "DURACAO");
+    Value decayValue(2.0, 1000.0, 300.0, "DURACAO", 100, true);
     values.push_back(decayValue);
 
-    Value bandpassValue(100.0, 7000.0, 1140.0, "BAND PASS");
+    Value bandpassValue(100.0, 7000.0, 1140.0, "BAND PASS", 100, true);
     values.push_back(bandpassValue);
 
     Value trainIntervalValue(2.0, 100.0, 11.0, "INTERVALO");
     values.push_back(trainIntervalValue);
 
-    Value indexValue(0, 2, 0, "INDICE", 3);
+    Value indexValue(0, 2, 0, "INDICE", 2);
     values.push_back(indexValue);
 
     setupParams();

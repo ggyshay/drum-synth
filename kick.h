@@ -8,22 +8,22 @@ public:
   Kick()
   {
     sine.amplitude(1);
-    Value attackValue(2.0, 200.0, 2.0, "ATAQUE", 100); // 0
+    Value attackValue(2.0, 200.0, 2.0, "ATAQUE", 100, true); // 0
     values.push_back(attackValue);
 
     Value noiseValue(0.0, 3.0, 0.2, "NOISE", 30); // 1
     values.push_back(noiseValue);
 
-    Value frequencyValue(30.0, 300.0, 55, "TOM", 135); // 2
+    Value frequencyValue(30.0, 300.0, 55, "TOM", 135, true); // 2
     values.push_back(frequencyValue);
 
-    Value lengthValue(30.0, 1000.0, 200.0, "DURACAO", 100); // 3
+    Value lengthValue(30.0, 1000.0, 200.0, "DURACAO", 100, true); // 3
     values.push_back(lengthValue);
 
     Value shapeValue(0.01, 0.99, 0.3, "FORMA", 100); // 4
     values.push_back(shapeValue);
 
-    Value cutoffValue(30.0, 4000.0, 440.0, "FILTRO", 100); // 5
+    Value cutoffValue(30.0, 4000.0, 440.0, "FILTRO", 100, true); // 5
     values.push_back(cutoffValue);
 
     Value indexValue(0, 2, 0, "INDICE", 2); // 6
