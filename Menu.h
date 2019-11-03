@@ -92,7 +92,9 @@ public:
 
     distortionScreen.parameter = new Value(0.0, 10.0, 1.0, "", 100);
     distortionScreen.render = [distortionScreen]() -> const char * {
-      return distortionScreen.parameter->toString().c_str();
+      const char *a = distortionScreen.parameter->toString().c_str();
+      Serial.println(a);
+      return a;
     };
     screens.push_back(distortionScreen);
 
@@ -116,6 +118,14 @@ public:
     activeClockScreen.strings.push_back("NAO");
     activeClockScreen.parameter = new Value(0.0, 1.0, 1.0, "", 1);
     activeClockScreen.onClick = [activeClockScreen]() -> const char * {
+      if (strcmp(activeClockScreen.strings[(int)(activeClockScreen.parameter->value)], "SIM") == 0)
+      {
+        audioInfra->initiateClock();
+      }
+      else
+      {
+        audioInfra->deactivateClock();
+      }
       return "INT CLOCK";
     };
 
@@ -127,6 +137,7 @@ public:
     Screen clockBPMScreen("BPM");
     clockBPMScreen.parameter = new Value(60.0, 220.0, 120.0, "", 160);
     clockBPMScreen.onClick = [clockBPMScreen]() -> const char * {
+      // audioInfra->setClock(clockBPMScreen.parameter->value);
       return "INT CLOCK";
     };
 
@@ -138,9 +149,10 @@ public:
     Screen sessionScreen("SESSAO");
     sessionScreen.strings.push_back("SALVAR");
     sessionScreen.strings.push_back("RECUPERAR");
-    sessionScreen.parameter = new Value(0.0, 1.0, 1.0, "", 1);
+    sessionScreen.strings.push_back("VOLTAR");
+    sessionScreen.parameter = new Value(0.0, 2.0, 2.0, "", 2);
     sessionScreen.onClick = [sessionScreen]() -> const char * {
-      if ((int)(sessionScreen.parameter->value))
+      if ((int)(sessionScreen.parameter->value) == 1)
       {
         audioInfra->recoverAudioState();
       }
@@ -185,6 +197,7 @@ public:
     }
     if (pos != 0xFF)
     {
+      Serial.println("found screen");
       selectedScreenIndex = pos;
       const char *a = screens[selectedScreenIndex].render();
       disp->putScreen(screens[selectedScreenIndex].title, a);

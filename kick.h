@@ -55,8 +55,12 @@ public:
     }
     else
     {
-      wav.play(fileName.c_str());
-      //        delay(5);
+      AudioNoInterrupts();
+      Serial.printf("is ready %s\n", SerialFlash.ready() ? "true" : "false");
+      wav.play("KICK1.RAW");
+      Serial.println("played");
+      AudioInterrupts();
+      delay(5);
     }
   }
 
@@ -72,7 +76,7 @@ public:
 
     fileName = "KICK";
     fileName += (int)floor(values[6].value);
-    fileName += ".WAV";
+    fileName += ".RAW";
   }
 
   void setIndex(byte _idx)
@@ -98,7 +102,7 @@ private:
   AudioEffectMultiply sineAM;
   AudioEffectMultiply noiseAM;
   AudioMixer4 noiseMixer;
-  AudioPlaySdRaw wav;
+  AudioPlaySerialflashRaw wav;
 
   AudioConnection *patch0;
   AudioConnection *patch1;

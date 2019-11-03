@@ -10,7 +10,6 @@
 #include "i2c_t3.h"
 #include "Menu.h"
 #include "EEPROM.h"
-//#include "Master.h"
 namespace std
 {
 void __throw_bad_alloc()
@@ -36,17 +35,12 @@ void __throw_bad_function_call()
 #define s0 15
 #define s1 16
 #define s2 17
-#define LED 13
 
 DisplayDriver disp;
 Menu menu(&disp);
 Encoder encoders[8];
 InstrumentI *instruments[8];
-//MasterChannel* master;
 byte clockCounter = 0;
-
-int startTime = 0;
-int loopTime = 0;
 
 AudioConnection *patchCord1;
 AudioConnection *patchCord2;
@@ -59,20 +53,18 @@ AudioConnection *patchCord8;
 AudioConnection *patchCord9;
 AudioConnection *patchCord10;
 AudioConnection *patchCord11;
-AudioMixer4 mixer;
 
 void setup()
 {
-  Serial.begin(31250);
+  Serial.begin(112500);
   while (!Serial)
     ;
   Serial.println("serial is up");
   audioInfra->setup();
   audioInfra->saveAudioState = &saveState;
   audioInfra->recoverAudioState = &recoverState;
-  //  audioInfra->onTick = &sendMidiClock;
+  audioInfra->onTick = &sendMidiClock;
 
-  //  master = new MasterChannel();
   Serial.println("audio infra setup done");
   instruments[0] = new Kick();
   instruments[1] = new Hat(100.0);
@@ -83,15 +75,14 @@ void setup()
   instruments[6] = new FM();
   instruments[7] = new FM();
 
-  //  patchCord1 = new AudioConnection(instruments[0]->s_out, 0, master->output1, 0);
-  //  patchCord2 = new AudioConnection(instruments[1]->s_out, 0, master->output1, 1);
-  //  patchCord3 = new AudioConnection(instruments[2]->s_out, 0, master->output1, 2);
-  //  patchCord4 = new AudioConnection(instruments[3]->s_out, 0, master->output1, 3);
-  //  patchCord5 = new AudioConnection(instruments[4]->s_out, 0, master->output2, 0);
-  //  patchCord6 = new AudioConnection(instruments[5]->s_out, 0, master->output2, 1);
-  //  patchCord7 = new AudioConnection(instruments[6]->s_out, 0, master->output2, 2);
-  //  patchCord8 = new AudioConnection(instruments[7]->s_out, 0, master->output2, 3);
-  //  patchCord9 = new AudioConnection(master->_output, audioInfra->_input);
+  patchCord1 = new AudioConnection(instruments[0]->s_out, 0, audioInfra->output1, 0);
+  patchCord2 = new AudioConnection(instruments[1]->s_out, 0, audioInfra->output1, 1);
+  patchCord3 = new AudioConnection(instruments[2]->s_out, 0, audioInfra->output1, 2);
+  patchCord4 = new AudioConnection(instruments[3]->s_out, 0, audioInfra->output1, 3);
+  patchCord5 = new AudioConnection(instruments[4]->s_out, 0, audioInfra->output2, 0);
+  patchCord6 = new AudioConnection(instruments[5]->s_out, 0, audioInfra->output2, 1);
+  patchCord7 = new AudioConnection(instruments[6]->s_out, 0, audioInfra->output2, 2);
+  patchCord8 = new AudioConnection(instruments[7]->s_out, 0, audioInfra->output2, 3);
 
   pinMode(A_PORT, INPUT);
   pinMode(B_PORT, INPUT);
@@ -99,7 +90,6 @@ void setup()
   pinMode(s0, OUTPUT);
   pinMode(s1, OUTPUT);
   pinMode(s2, OUTPUT);
-  pinMode(LED, OUTPUT);
   Serial.println("objects allocated");
 
   for (int i = 0; i < 8; i++)
@@ -123,13 +113,13 @@ void setup()
   usbMIDI.setHandleStart(sendMidiStart);
   usbMIDI.setHandleStop(sendMidiStop);
 
-  digitalWrite(LED, HIGH);
-  audioInfra->initiateClock();
   Serial.println("general setup finished");
 }
 
 void loop()
 {
+  //  if(millis() % 100 == 0) Serial.println(AudioProcessorUsage());
+  //  if(millis() % 100 == 50) Serial.println(AudioMemoryUsage());
 
   usbMIDI.read();
 
@@ -168,22 +158,24 @@ void handleSequencerResponse(void)
 
 void sendMidiStart()
 {
-  //  if (!audioInfra->usingInternalClock) {
-  clockCounter = 0;
-  Wire2.beginTransmission(0x66);
-  Wire2.write(0xFA);
-  Wire2.endTransmission();
-  //  }
+  if (!(audioInfra->usingInternalClock))
+  {
+    clockCounter = 0;
+    Wire2.beginTransmission(0x66);
+    Wire2.write(0xFA);
+    Wire2.endTransmission();
+  }
 }
 
 void sendMidiStop()
 {
-  //  if (!audioInfra->usingInternalClock) {
-  clockCounter = 0;
-  Wire2.beginTransmission(0x66);
-  Wire2.write(0xFC);
-  Wire2.endTransmission();
-  //  }
+  if (!(audioInfra->usingInternalClock))
+  {
+    clockCounter = 0;
+    Wire2.beginTransmission(0x66);
+    Wire2.write(0xFC);
+    Wire2.endTransmission();
+  }
 }
 
 void sendMidiClock()
@@ -193,14 +185,14 @@ void sendMidiClock()
 
 void handleClockIn()
 {
-  //  if (!audioInfra->usingInternalClock) {
-  if (clockCounter == 0)
+  if (!(audioInfra->usingInternalClock))
   {
-    loopTime = millis();
-    sendMidiClock();
+    if (clockCounter == 0)
+    {
+      sendMidiClock();
+    }
+    clockCounter = (clockCounter + 1) % 6;
   }
-  clockCounter = (clockCounter + 1) % 6;
-  //  }
 }
 
 void saveState()

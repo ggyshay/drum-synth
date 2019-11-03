@@ -63,10 +63,6 @@ public:
     index = idx;
   }
 
-  //params
-  float attackTime = 2.0;
-  float decayTime = 200.0;
-
   void setupParams()
   {
     sine.frequency(130);

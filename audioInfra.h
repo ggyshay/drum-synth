@@ -3,12 +3,14 @@
 #include <SD_t3.h>
 #include <functional>
 #include <EEPROM.h>
+#include <SerialFlash.h>
 
 #ifndef _AUDIO_INFRA_H_
 #define _AUDIO_INFRA_H_
 #define SDCARD_CS_PIN 10
 #define SDCARD_MOSI_PIN 7
 #define SDCARD_SCK_PIN 14
+#define SFLASH_PIN 6
 
 void print_i2c_status(void)
 {
@@ -43,20 +45,24 @@ class AudioInfra
 public:
   void setup()
   {
-    AudioMemory(50);
-    //      sgtl5000_1.enable();
-    //      sgtl5000_1.volume(1);
+    AudioMemory(60);
+    sgtl5000_1.enable();
+    sgtl5000_1.volume(0.8);
 
-    audioInfraPatch1 = new AudioConnection(_input, 0, audioOutput, 0);
-    audioInfraPatch2 = new AudioConnection(_input, 0, audioOutput, 1);
+    audioInfraPatch1 = new AudioConnection(output1, 0, internalMixer, 0);
+    audioInfraPatch2 = new AudioConnection(output2, 0, internalMixer, 1);
+    audioInfraPatch3 = new AudioConnection(internalMixer, 0, audioOutput, 0);
+    audioInfraPatch4 = new AudioConnection(internalMixer, 0, audioOutput, 1);
 
-    //      SPI.setMOSI(SDCARD_MOSI_PIN);
-    //      SPI.setSCK(SDCARD_SCK_PIN);
-    //      while (!(SD.begin(SDCARD_CS_PIN))) {
-    //        Serial.println("Unable to access the SD card");
-    //        delay(500);
-    //      }
+    SPI.setMOSI(SDCARD_MOSI_PIN);
+    SPI.setSCK(SDCARD_SCK_PIN);
+    // while (!(SD.begin(SDCARD_CS_PIN))) {
+    //   Serial.println("Unable to access the SD card");
+    //   delay(500);
+    // }
     Serial.println("connected to sd card");
+    SerialFlash.begin(SFLASH_PIN);
+    Serial.println("serial flash begun");
   }
 
   void initiateClock()
@@ -81,8 +87,8 @@ public:
     myTimer.update(sixteenth);
   }
 
-  //    AudioMixer4       output1;
-  //    AudioMixer4       output2;
+  AudioMixer4 output1;
+  AudioMixer4 output2;
   AudioAmplifier _input;
   bool usingInternalClock = false;
   void (*onTick)(void) = nullptr;
@@ -104,7 +110,6 @@ AudioInfra *audioInfra = new AudioInfra();
 
 #endif
 
-
 // #include <Audio.h>
 // #include <i2c_t3.h>
 // #include <SD.h>
@@ -118,9 +123,6 @@ AudioInfra *audioInfra = new AudioInfra();
 // AudioConnection          patchCord2(playMem, 1, i2s1, 1);
 // AudioControlSGTL5000     sgtl5000_1;     //xy=64.5,20
 // // GUItool: end automatically generated code
-
-
-
 
 // #define SDCARD_CS_PIN    10
 // #define SDCARD_MOSI_PIN  7
@@ -150,7 +152,6 @@ AudioInfra *audioInfra = new AudioInfra();
 //   }
 //   extension[i - extOffset] = fileName[i];
 // }
-
 
 // void setup() {
 //   Serial.begin(112500);
@@ -233,7 +234,6 @@ AudioInfra *audioInfra = new AudioInfra();
 //   delay(10);
 //   Serial.println("Finished All Files");
 // }
-
 
 // ===============================================================================================================================
 //#include <SerialFlash.h>

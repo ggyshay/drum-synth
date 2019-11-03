@@ -61,7 +61,7 @@ public:
     String s = nameTag;
     s += String(" ");
     s += value;
-    s += "\n";
+    s += "\0";
     return s;
   }
 
