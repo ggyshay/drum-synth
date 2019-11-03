@@ -55,12 +55,12 @@ public:
     }
     else
     {
-      AudioNoInterrupts();
       Serial.printf("is ready %s\n", SerialFlash.ready() ? "true" : "false");
-      wav.play("KICK1.RAW");
-      Serial.println("played");
-      AudioInterrupts();
-      delay(5);
+      if (wav.play("KICK1.RAW"))
+      {
+        count++;
+      }
+      Serial.printf("played %d times", count);
     }
   }
 
@@ -83,6 +83,8 @@ public:
   {
     index = _idx;
   }
+
+  int count = 0;
 
   float *filterCutoff;
   float *bodyLength;

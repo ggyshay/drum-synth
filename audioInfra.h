@@ -62,6 +62,7 @@ public:
     // }
     Serial.println("connected to sd card");
     SerialFlash.begin(SFLASH_PIN);
+    delay(100);
     Serial.println("serial flash begun");
   }
 
