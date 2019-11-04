@@ -70,9 +70,9 @@ public:
     env2.setCoefficients(60.0, 0.001, values[0].value, values[3].value);
     env3.setCoefficients(values[1].value, 0.001, values[0].value, values[3].value * 2);
 
-    fileName = "CLAP";
-    fileName += (int)floor(values[4].value);
-    fileName += ".WAV";
+    // fileName = "CLAP";
+    // fileName += (int)floor(values[4].value);
+    // fileName += ".WAV";
   }
 
   float bandpass = 1140;

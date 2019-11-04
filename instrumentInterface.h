@@ -11,7 +11,6 @@ public:
     isExp = _isExp;
     if (isExp)
     {
-      float h = 1 / ((float)steps);
       float lambda = -log(_M / _m) / ((float)steps);
       delta = 1 - lambda;
     }
@@ -56,14 +55,17 @@ public:
     value = max(value, _min);
   }
 
-  String toString()
-  {
-    String s = nameTag;
-    s += String(" ");
-    s += value;
-    s += "\0";
-    return s;
-  }
+  // const char *toString()
+  // {
+  //   char output[9];
+  //   snprintf(output, 9, "%.2f", value);
+  //   // String s = nameTag;
+  //   // s += String(" ");
+  //   // s += value;
+  //   // s += "\0";
+  //   return output;
+  //   // return s;
+  // }
 
   //
   //    void setBoundaries(float _min, float _max) {
@@ -107,7 +109,7 @@ public:
   //      return values[selectedIndex].setValue(val);
   //    }
 protected:
-  String fileName;
+  const char *fileName;
 
 private:
   int selectedIndex = 0;

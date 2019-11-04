@@ -74,9 +74,9 @@ public:
     filter.setLowpass(0, values[5].value, 0.6);
     noise.amplitude(values[1].value);
 
-    fileName = "KICK";
-    fileName += (int)floor(values[6].value);
-    fileName += ".RAW";
+    // fileName = "KICK";
+    // fileName += (int)floor(values[6].value);
+    // fileName += ".RAW";
   }
 
   void setIndex(byte _idx)
@@ -93,7 +93,7 @@ public:
   float *attackTime;
 
 private:
-  String filePath = "KICK";
+  const char *filePath = "KICK";
   byte index = 0;
   AudioSynthWaveformSineModulated sine;
   Envelope pitchEnv;

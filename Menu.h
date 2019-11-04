@@ -21,7 +21,7 @@ public:
   std::function<const char *(void)> onClick = nullptr; // quando o encoder clica alguma açao é performada especifica de cada screen e retorna a proxima pagina
   Value *parameter;                                    // pode ser um parametro do infra como freuquencia do filtro ou indice no array de strings
   std::vector<char *> strings;                         // se o parametro é interno aqui tem os valores que essa screen tem "LPF, HPF, BPF, VOLTAR"
-  std::function<const char *(void)> render = nullptr;  //retorna o float ou string que deve ser colocado no display, roda quando o encoder mudar.
+  std::function<void(char *, int)> render = nullptr;   //retorna o float ou string que deve ser colocado no display, roda quando o encoder mudar.
 };
 
 class Menu
@@ -53,8 +53,8 @@ public:
       return menuScreen.strings[(int)(menuScreen.parameter->value)];
     };
 
-    menuScreen.render = [menuScreen]() -> char * {
-      return menuScreen.strings[(int)(menuScreen.parameter->value)];
+    menuScreen.render = [menuScreen](char *str, int len) -> void {
+      strcpy(str, menuScreen.strings[(int)(menuScreen.parameter->value)]);
     };
     screens.push_back(menuScreen);
 
@@ -69,8 +69,8 @@ public:
     filterScreen.onClick = [filterScreen]() -> const char * {
       return strcmp(filterScreen.strings[(int)filterScreen.parameter->value], "VOLTAR") == 0 ? "MENU" : "FREQUENCIA";
     };
-    filterScreen.render = [filterScreen]() -> char * {
-      return filterScreen.strings[(int)(filterScreen.parameter->value)];
+    filterScreen.render = [filterScreen](char *str, int len) -> void {
+      strcpy(str, filterScreen.strings[(int)(filterScreen.parameter->value)]);
     };
     screens.push_back(filterScreen);
 
@@ -80,8 +80,9 @@ public:
     };
 
     filterFrequencyScreen.parameter = new Value(200.0, 4000.0, 1.0, "", 100);
-    filterFrequencyScreen.render = [filterFrequencyScreen]() -> const char * {
-      return filterFrequencyScreen.parameter->toString().c_str();
+    filterFrequencyScreen.render = [filterFrequencyScreen](char *str, int len) -> void {
+      snprintf(str, len, "%.2f", filterFrequencyScreen.parameter->value);
+      // return filterFrequencyScreen.parameter->toString();
     };
     screens.push_back(filterFrequencyScreen);
 
@@ -91,10 +92,11 @@ public:
     };
 
     distortionScreen.parameter = new Value(0.0, 10.0, 1.0, "", 100);
-    distortionScreen.render = [distortionScreen]() -> const char * {
-      const char *a = distortionScreen.parameter->toString().c_str();
-      Serial.println(a);
-      return a;
+    distortionScreen.render = [distortionScreen](char *str, int len) -> void {
+      snprintf(str, len, "%.2f", distortionScreen.parameter->value);
+      // const char *a = distortionScreen.parameter->toString();
+      // Serial.println(a);
+      // return a;
     };
     screens.push_back(distortionScreen);
 
@@ -108,8 +110,9 @@ public:
       return strcmp(a, "VOLTAR") == 0 ? "MENU" : a;
     };
 
-    clockScreen.render = [clockScreen]() -> const char * {
-      return clockScreen.strings[(int)(clockScreen.parameter->value)];
+    clockScreen.render = [clockScreen](char *str, int len) -> void {
+      strcpy(str, clockScreen.strings[(int)(clockScreen.parameter->value)]);
+      // return ;
     };
     screens.push_back(clockScreen);
 
@@ -129,8 +132,8 @@ public:
       return "INT CLOCK";
     };
 
-    activeClockScreen.render = [activeClockScreen]() -> const char * {
-      return activeClockScreen.strings[(int)(activeClockScreen.parameter->value)];
+    activeClockScreen.render = [activeClockScreen](char *str, int len) -> void {
+      strcpy(str, activeClockScreen.strings[(int)(activeClockScreen.parameter->value)]);
     };
     screens.push_back(activeClockScreen);
 
@@ -141,8 +144,8 @@ public:
       return "INT CLOCK";
     };
 
-    clockBPMScreen.render = [clockBPMScreen]() -> const char * {
-      return clockBPMScreen.parameter->toString().c_str();
+    clockBPMScreen.render = [clockBPMScreen](char *str, int len) -> void {
+      snprintf(str, len, "%.2f", clockBPMScreen.parameter->value);
     };
     screens.push_back(clockBPMScreen);
 
@@ -163,8 +166,8 @@ public:
       return "MENU";
     };
 
-    sessionScreen.render = [sessionScreen]() -> const char * {
-      return sessionScreen.strings[(int)(sessionScreen.parameter->value)];
+    sessionScreen.render = [sessionScreen](char *str, int len) -> void {
+      strcpy(str, sessionScreen.strings[(int)(sessionScreen.parameter->value)]);
     };
     screens.push_back(sessionScreen);
 
@@ -177,8 +180,9 @@ public:
     bool changed = encoder.setReading(digitalReadFast(mS0), digitalReadFast(mS1), digitalReadFast(mS2));
     if (changed)
     {
-      const char *a = screens[selectedScreenIndex].render();
-      disp->putScreen(screens[selectedScreenIndex].title, a);
+      char str[14];
+      screens[selectedScreenIndex].render(str, 14);
+      disp->putScreen(screens[selectedScreenIndex].title, str);
     }
   }
 
@@ -199,8 +203,9 @@ public:
     {
       Serial.println("found screen");
       selectedScreenIndex = pos;
-      const char *a = screens[selectedScreenIndex].render();
-      disp->putScreen(screens[selectedScreenIndex].title, a);
+      char str[14];
+      screens[selectedScreenIndex].render(str, 14);
+      disp->putScreen(screens[selectedScreenIndex].title, str);
       encoder.setParameterPointer(screens[selectedScreenIndex].parameter);
     }
   }

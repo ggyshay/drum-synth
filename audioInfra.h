@@ -12,12 +12,26 @@
 #define SDCARD_SCK_PIN 14
 #define SFLASH_PIN 6
 
+void print_cpu_memory_status(void)
+{
+  Serial.print("CPU: ");
+  Serial.print(AudioProcessorUsage());
+  Serial.print(",");
+  Serial.print(AudioProcessorUsageMax());
+  Serial.print("    ");
+  Serial.print("Memory: ");
+  Serial.print(AudioMemoryUsage());
+  Serial.print(",");
+  Serial.print(AudioMemoryUsageMax());
+  Serial.println();
+}
+
 void print_i2c_status(void)
 {
-  switch (Wire.status())
+  switch (Wire1.status())
   {
   case I2C_WAITING:
-    Serial.print("I2C waiting, no errors\n");
+    // Serial.print("I2C waiting, no errors\n");
     break;
   case I2C_ADDR_NAK:
     Serial.print("Slave addr not acknowledged\n");
@@ -33,6 +47,21 @@ void print_i2c_status(void)
     break;
   case I2C_BUF_OVF:
     Serial.print("I2C buffer overflow\n");
+    break;
+  case I2C_NOT_ACQ:
+    Serial.print("I2C: Not acq\n");
+    break;
+  case I2C_DMA_ERR:
+    Serial.print("DMA error\b");
+    break;
+  case I2C_SENDING:
+    Serial.println("i2c sending");
+    break;
+  case I2C_SEND_ADDR:
+    Serial.println("i2c send addr");
+    break;
+  case I2C_RECEIVING:
+    Serial.println("i2c recieving");
     break;
   default:
     Serial.print("I2C busy\n");

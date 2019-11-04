@@ -53,7 +53,7 @@ public:
     }
     else
     {
-      wav.play(fileName.c_str());
+      // wav.play(fileName.c_str());
     }
   }
 
@@ -66,9 +66,9 @@ public:
     fmMixer.gain(1, values[4].value);
     fmMixer.gain(0, values[5].value);
 
-    fileName = "FM";
-    fileName += (int)floor(values[6].value);
-    fileName += ".WAV";
+    // fileName = "FM";
+    // fileName += (int)floor(values[6].value);
+    // fileName += ".WAV";
   }
 
   void setIndex(byte idx)

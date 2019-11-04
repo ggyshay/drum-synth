@@ -127,7 +127,7 @@ void DisplayDriver::writeLine(char *s)
 
     byte index = 0;
     char c;
-    while (*(s + index) != 0x00)
+    while (*(s + index) != 0x00 && index < 15)
     {
       c = (*(s + index) - 0x2c);
       if (*(s + index) == 0x20)

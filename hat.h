@@ -84,9 +84,9 @@ public:
     sq6.begin(1, values[0].value * 8.21, WAVEFORM_SQUARE);
     noise.amplitude(values[4].value);
 
-    fileName = "HAT";
-    fileName += (int)floor(values[6].value);
-    fileName += ".WAV";
+    // fileName = "HAT";
+    // fileName += (int)floor(values[6].value);
+    // fileName += ".WAV";
   }
 
   //    AudioMixer4      outMixer;

@@ -80,13 +80,13 @@ public:
     sizzleFilter.resonance(0.3);
     sizzleEnv.setCoefficients(values[1].value, 0.001, values[0].value);
 
-    fileName = "SNARE";
-    fileName += (int)floor(values[3].value);
-    fileName += ".WAV";
+    // fileName = "SNARE";
+    // fileName += (int)floor(values[3].value);
+    // fileName += ".WAV";
   }
 
 private:
-  String filePath = "SNARE";
+  const char *filePath = "SNARE";
   byte index = 0;
 
   AudioSynthWaveformSineModulated sine;

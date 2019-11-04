@@ -106,7 +106,7 @@ void setup()
   pinMode(4, OUTPUT);
   disp.init();
   Serial.println("attempting to start Wire2");
-  Wire2.begin(I2C_MASTER, 0x0, I2C_PINS_3_4, I2C_PULLUP_EXT, 400000L);
+  Wire2.begin(I2C_MASTER, 0x0, I2C_PINS_3_4, I2C_PULLUP_EXT, 1200000L);
   Wire2.onReqFromDone(handleSequencerResponse);
 
   usbMIDI.setHandleClock(handleClockIn);
@@ -118,7 +118,8 @@ void setup()
 
 void loop()
 {
-  //  if(millis() % 100 == 0) Serial.println(AudioProcessorUsage());
+  if (millis() % 100 == 0)
+    print_cpu_memory_status();
   //  if(millis() % 100 == 50) Serial.println(AudioMemoryUsage());
 
   usbMIDI.read();
