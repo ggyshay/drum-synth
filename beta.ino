@@ -41,6 +41,7 @@ Menu menu(&disp);
 Encoder encoders[8];
 InstrumentI *instruments[8];
 byte clockCounter = 0;
+byte velocities[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 AudioConnection *patchCord1;
 AudioConnection *patchCord2;
@@ -118,8 +119,21 @@ void setup()
 
 void loop()
 {
-  if (millis() % 100 == 0)
-    print_cpu_memory_status();
+  for (byte i = 0; i < 8; ++i)
+  {
+    if (velocities[i] > 0)
+    {
+      Serial.printf("sending %d = %d\n", i, velocities[i]);
+      usbMIDI.sendNoteOn(36 + i, velocities[i], 0);
+      Serial.println("midi ok");
+      instruments[i]->noteOn(velocities[i]);
+      Serial.println("noteOn");
+      velocities[i] = 0;
+    }
+  }
+
+  // if (millis() % 100 == 0)
+  //   print_cpu_memory_status();
   //  if(millis() % 100 == 50) Serial.println(AudioMemoryUsage());
 
   usbMIDI.read();
@@ -145,16 +159,7 @@ void loop()
 
 void handleSequencerResponse(void)
 {
-  byte velocities[8];
   Wire2.read(velocities, Wire2.available());
-  for (byte i = 0; i < 8; ++i)
-  {
-    usbMIDI.sendNoteOn(36 + i, velocities[i], 0);
-    if (velocities[i] > 0)
-    {
-      instruments[i]->noteOn(velocities[i]);
-    }
-  }
 }
 
 void sendMidiStart()
