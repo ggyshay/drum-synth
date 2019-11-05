@@ -11,6 +11,7 @@ public:
   void putScreen(const char *, float);
 
 private:
+  static unsigned int lastTransmit;
   static void blackLine();
   static void writeLine(char *);
   void sendCmd(unsigned char cmd); //send a single command (see datasheet)

@@ -119,15 +119,16 @@ void setup()
 
 void loop()
 {
+  // while (Serial.available())
+  // {
+  //   Serial.print(Serial.read());
+  // }
   for (byte i = 0; i < 8; ++i)
   {
     if (velocities[i] > 0)
     {
-      Serial.printf("sending %d = %d\n", i, velocities[i]);
       usbMIDI.sendNoteOn(36 + i, velocities[i], 0);
-      Serial.println("midi ok");
       instruments[i]->noteOn(velocities[i]);
-      Serial.println("noteOn");
       velocities[i] = 0;
     }
   }
