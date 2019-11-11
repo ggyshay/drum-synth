@@ -12,6 +12,17 @@
 #define SDCARD_SCK_PIN 14
 #define SFLASH_PIN 6
 
+void setupWaveShaper(float *curve, int buffer_length, float amount)
+{
+  float deg = PI / 180.0f;
+  float x;
+  for (int i = 0; i < buffer_length; ++i)
+  {
+    x = (float)i * 2.0f / buffer_length - 1.0f;
+    curve[i] = (3.0 + amount) * x * 20.0 * deg / (PI + amount * abs(x));
+  }
+}
+
 void print_cpu_memory_status(void)
 {
   Serial.print("CPU: ");
@@ -77,11 +88,20 @@ public:
     AudioMemory(60);
     sgtl5000_1.enable();
     sgtl5000_1.volume(0.8);
+    sgtl5000_1.audioPostProcessorEnable();
+    sgtl5000_1.enhanceBassEnable();
+    sgtl5000_1.autoVolumeControl(0, 1, 0, -18.0, 45, 100);
+    sgtl5000_1.autoVolumeEnable();
 
     audioInfraPatch1 = new AudioConnection(output1, 0, internalMixer, 0);
     audioInfraPatch2 = new AudioConnection(output2, 0, internalMixer, 1);
-    audioInfraPatch3 = new AudioConnection(internalMixer, 0, audioOutput, 0);
-    audioInfraPatch4 = new AudioConnection(internalMixer, 0, audioOutput, 1);
+    audioInfraPatch3 = new AudioConnection(internalMixer, distortion);
+    audioInfraPatch4 = new AudioConnection(distortion, 0, filter, 0);
+    audioInfraPatch5 = new AudioConnection(filter, 2, audioOutput, 0);
+    audioInfraPatch6 = new AudioConnection(filter, 2, audioOutput, 1);
+    audioInfraPatch7 = new AudioConnection(filter, 2, usbOutput, 0);
+    audioInfraPatch8 = new AudioConnection(filter, 2, usbOutput, 1);
+    filter.resonance(1);
 
     SPI.setMOSI(SDCARD_MOSI_PIN);
     SPI.setSCK(SDCARD_SCK_PIN);
@@ -93,6 +113,13 @@ public:
     SerialFlash.begin(SFLASH_PIN);
     delay(100);
     Serial.println("serial flash begun");
+    setDistortion(1.0);
+  }
+
+  void setDistortion(float amount)
+  {
+    setupWaveShaper(waveshaperArray, 257, amount);
+    distortion.shape(waveshaperArray, 257);
   }
 
   void initiateClock()
@@ -116,7 +143,15 @@ public:
     int sixteenth = (int)(1000.0 * 15000.0 / bpm);
     myTimer.update(sixteenth);
   }
-
+  void setFilter(int frequency)
+  {
+    if (frequency - lastFLTPosition > 2 || frequency - lastFLTPosition < -2)
+    {
+      lastFLTPosition = frequency;
+      filter.frequency(20.0 * exp(0.00674585476 * frequency));
+    }
+  }
+  float waveshaperArray[257];
   AudioMixer4 output1;
   AudioMixer4 output2;
   AudioAmplifier _input;
@@ -127,13 +162,21 @@ public:
 
 private:
   AudioOutputI2S audioOutput;
+  AudioOutputUSB usbOutput;
   AudioConnection *audioInfraPatch1;
   AudioConnection *audioInfraPatch2;
   AudioConnection *audioInfraPatch3;
   AudioConnection *audioInfraPatch4;
+  AudioConnection *audioInfraPatch5;
+  AudioConnection *audioInfraPatch6;
+  AudioConnection *audioInfraPatch7;
+  AudioConnection *audioInfraPatch8;
   AudioMixer4 internalMixer;
   AudioControlSGTL5000 sgtl5000_1;
   IntervalTimer myTimer;
+  AudioEffectWaveshaper distortion;
+  AudioFilterStateVariable filter;
+  int lastFLTPosition = 0;
 };
 
 AudioInfra *audioInfra = new AudioInfra();

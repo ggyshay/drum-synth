@@ -87,11 +87,12 @@ public:
     screens.push_back(filterFrequencyScreen);
 
     Screen distortionScreen("DISTORCAO");
+    distortionScreen.parameter = new Value(0.0, 100.0, 1.0, "", 100);
     distortionScreen.onClick = [distortionScreen]() -> const char * {
+      audioInfra->setDistortion(distortionScreen.parameter->value);
       return "MENU";
     };
 
-    distortionScreen.parameter = new Value(0.0, 10.0, 1.0, "", 100);
     distortionScreen.render = [distortionScreen](char *str, int len) -> void {
       snprintf(str, len, "%.2f", distortionScreen.parameter->value);
       // const char *a = distortionScreen.parameter->toString();

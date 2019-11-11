@@ -10,6 +10,7 @@
 #include "i2c_t3.h"
 #include "Menu.h"
 #include "EEPROM.h"
+#include "SerialTransfer.h";
 namespace std
 {
 void __throw_bad_alloc()
@@ -35,6 +36,7 @@ void __throw_bad_function_call()
 #define s0 15
 #define s1 16
 #define s2 17
+#define FLT_PORT A12
 
 DisplayDriver disp;
 Menu menu(&disp);
@@ -57,7 +59,7 @@ AudioConnection *patchCord11;
 
 void setup()
 {
-  Serial.begin(112500);
+  Serial.begin(4608000U);
   while (!Serial)
     ;
   Serial.println("serial is up");
@@ -119,6 +121,7 @@ void setup()
 
 void loop()
 {
+  serialTransfer.transfer();
   // while (Serial.available())
   // {
   //   Serial.print(Serial.read());
@@ -156,6 +159,7 @@ void loop()
     }
   }
   menu.update();
+  audioInfra->setFilter(analogRead(FLT_PORT));
 }
 
 void handleSequencerResponse(void)
@@ -231,5 +235,9 @@ void recoverState()
       EEPROM.get(offset, instruments[i]->values[j].value);
       offset += sizeof(float);
     }
+  }
+  for (byte i = 0; i < 8; i++)
+  {
+    instruments[i]->setupParams();
   }
 }
