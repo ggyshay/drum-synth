@@ -42,6 +42,7 @@ DisplayDriver disp;
 Menu menu(&disp);
 Encoder encoders[8];
 InstrumentI *instruments[8];
+SerialTransfer serialTransfer(&disp);
 byte clockCounter = 0;
 byte velocities[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 

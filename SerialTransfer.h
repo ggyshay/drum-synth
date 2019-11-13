@@ -1,12 +1,15 @@
 #include "SerialFlash.h"
+#include "displayDriver.h";
 
 class SerialTransfer
 {
 public:
+    SerialTransfer(DisplayDriver *_disp)
+    {
+        disp = _disp;
+    }
     void transfer()
     {
-        // if (!transfering)
-        //     return;
         if (Serial.available() >= 32)
         {
             for (byte i = 0; i < 32; ++i)
@@ -20,11 +23,11 @@ public:
 private:
     int nameSize = 0;
     int dataSize = 0;
-    // bool transfering = true;
     char buffer[32];
     char nameBuf[20];
     int transfered = 0;
     SerialFlashFile file;
+    DisplayDriver *disp;
 
     void handleBuffer()
     {
@@ -45,7 +48,6 @@ private:
         transfered++;
         if (((transfered - 1) << 5) >= dataSize)
         {
-            // transfering = false;
             endTransfer();
             Serial.write(0xFF);
         }
@@ -60,6 +62,7 @@ private:
         nameBuf[nameSize] = 0;
         Serial.write(nameSize);
         Serial.print(dataSize);
+        disp->putScreen("TRANSFERINDO", nameBuf);
 
         file = SerialFlash.open(nameBuf);
         if (file)
@@ -80,8 +83,7 @@ private:
     {
         nameSize = 0;
         dataSize = 0;
-        // transfering = true;
         transfered = 0;
+        disp->putScreen("TRANSFERENCIA", "CONCLUIDA");
     }
 };
-SerialTransfer serialTransfer;

@@ -1,7 +1,8 @@
 #include "Arduino.h"
 #include <avr/pgmspace.h>
 #include <i2c_t3.h>
-
+#ifndef _DISPLAY_DRIVER_H_
+#define _DISPLAY_DRIVER_H_
 class DisplayDriver
 {
 public:
@@ -19,3 +20,5 @@ private:
   static void triggerTransmission();
   static void transmitScreen();
 };
+
+#endif
