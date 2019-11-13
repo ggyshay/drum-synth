@@ -1,6 +1,5 @@
 #include <Audio.h>
 #include "Envelope.h"
-#include "samples.h"
 
 class Hat : public InstrumentI
 {
@@ -47,11 +46,6 @@ public:
     patch15 = new AudioConnection(wav, 0, outMixer, 1);
   }
 
-  void setIndex(byte idx)
-  {
-    index = idx;
-  }
-
   void noteOn(byte velocity)
   {
 
@@ -63,11 +57,11 @@ public:
     else if (floor(values[6].value) == 1)
     {
       //        wav.play(fileName.c_str());
-      wav.play(AudioSampleHat1);
+      // wav.play(AudioSampleHat1);
     }
     else
     {
-      wav.play(AudioSampleHat2);
+      // wav.play(AudioSampleHat2);
     }
   }
 

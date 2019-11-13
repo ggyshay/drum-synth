@@ -88,10 +88,6 @@ public:
     AudioMemory(60);
     sgtl5000_1.enable();
     sgtl5000_1.volume(0.8);
-    sgtl5000_1.audioPostProcessorEnable();
-    sgtl5000_1.enhanceBassEnable();
-    sgtl5000_1.autoVolumeControl(0, 1, 0, -18.0, 45, 100);
-    sgtl5000_1.autoVolumeEnable();
 
     audioInfraPatch1 = new AudioConnection(output1, 0, internalMixer, 0);
     audioInfraPatch2 = new AudioConnection(output2, 0, internalMixer, 1);

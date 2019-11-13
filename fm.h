@@ -71,11 +71,6 @@ public:
     // fileName += ".WAV";
   }
 
-  void setIndex(byte idx)
-  {
-    index = idx;
-  }
-
   float frequency1 = 100;
   float frequency2 = 880;
   float decay1 = 50;

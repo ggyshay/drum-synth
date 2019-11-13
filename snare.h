@@ -2,7 +2,6 @@
 #include "Envelope.h"
 #include "instrumentInterface.h"
 #include <functional>
-#include "samples.h"
 
 class Snare : public InstrumentI
 {
@@ -53,14 +52,8 @@ public:
     else
     {
       //        wav.play(fileName.c_str());
-      wav.play(AudioSampleSnare1);
+      // wav.play(AudioSampleSnare1);
     }
-  }
-
-  //    AudioMixer4 outMixer;
-  void setIndex(byte idx)
-  {
-    index = idx;
   }
 
   void setupParams()

@@ -1,7 +1,5 @@
 #include <Audio.h>
 #include "Envelope.h"
-#include <string>
-#include "samples.h"
 
 class Clap : public InstrumentI
 {
@@ -52,13 +50,8 @@ public:
     }
     else
     {
-      wav.play(AudioSampleClap1);
+      wav.play(fileName);
     }
-  }
-
-  void setIndex(byte idx)
-  {
-    index = idx;
   }
 
   void setupParams()
@@ -70,9 +63,7 @@ public:
     env2.setCoefficients(60.0, 0.001, values[0].value, values[3].value);
     env3.setCoefficients(values[1].value, 0.001, values[0].value, values[3].value * 2);
 
-    // fileName = "CLAP";
-    // fileName += (int)floor(values[4].value);
-    // fileName += ".WAV";
+    snprintf(fileName, 10, "CLAP%d.RAW", (int)floor(values[4].value));
   }
 
   float bandpass = 1140;
@@ -85,7 +76,7 @@ private:
   EnvelopeWithDelay env2;
   EnvelopeWithDelay env3;
   byte index = 0;
-  AudioPlayMemory wav;
+  AudioPlaySerialflashRaw wav;
   AudioEffectMultiply AM1;
   AudioEffectMultiply AM2;
   AudioEffectMultiply AM3;

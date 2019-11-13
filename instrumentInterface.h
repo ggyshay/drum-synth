@@ -93,7 +93,6 @@ public:
   AudioAmplifier s_out;
   virtual void noteOn(byte) = 0;
   virtual void setupParams() = 0;
-  virtual void setIndex(byte _idx) = 0;
   Value *getNextValue()
   {
     selectedIndex = (selectedIndex + 1) % values.size();
@@ -105,11 +104,8 @@ public:
     return &(values[selectedIndex]);
   }
 
-  //    float setValue (byte val) {
-  //      return values[selectedIndex].setValue(val);
-  //    }
 protected:
-  const char *fileName;
+  char fileName[20];
 
 private:
   int selectedIndex = 0;

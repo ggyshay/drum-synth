@@ -10,7 +10,7 @@
 #include "i2c_t3.h"
 #include "Menu.h"
 #include "EEPROM.h"
-#include "SerialTransfer.h";
+#include "SerialTransfer.h"
 namespace std
 {
 void __throw_bad_alloc()
@@ -122,10 +122,6 @@ void setup()
 void loop()
 {
   serialTransfer.transfer();
-  // while (Serial.available())
-  // {
-  //   Serial.print(Serial.read());
-  // }
   for (byte i = 0; i < 8; ++i)
   {
     if (velocities[i] > 0)
@@ -136,14 +132,10 @@ void loop()
     }
   }
 
-  // if (millis() % 100 == 0)
-  //   print_cpu_memory_status();
-  //  if(millis() % 100 == 50) Serial.println(AudioMemoryUsage());
-
   usbMIDI.read();
 
   for (byte i = 0; i < 8; ++i)
-  { // optimize for serial ports
+  {
     digitalWriteFast(s0, i & B001);
     digitalWriteFast(s1, i & B010);
     digitalWriteFast(s2, i & B100);
@@ -151,9 +143,7 @@ void loop()
     bool changed = encoders[i].setReading(digitalReadFast(A_PORT), digitalReadFast(B_PORT), digitalReadFast(C_PORT));
     if (changed)
     {
-      //      instruments[i]->setValue(encoders[i].getValue());
       Value *v = instruments[i]->getCurrentValue();
-      // Serial.print(v->toString());
       disp.putScreen(v->nameTag, v->value);
       instruments[i]->setupParams();
     }

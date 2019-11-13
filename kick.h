@@ -55,7 +55,7 @@ public:
     }
     else
     {
-      wav.play("KICK1.RAW");
+      wav.play(fileName);
     }
   }
 
@@ -69,14 +69,7 @@ public:
     filter.setLowpass(0, values[5].value, 0.6);
     noise.amplitude(values[1].value);
 
-    // fileName = "KICK";
-    // fileName += (int)floor(values[6].value);
-    // fileName += ".RAW";
-  }
-
-  void setIndex(byte _idx)
-  {
-    index = _idx;
+    snprintf(fileName, 10, "KICK%d.RAW", (int)floor(values[6].value));
   }
 
   float *filterCutoff;

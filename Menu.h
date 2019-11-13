@@ -202,7 +202,6 @@ public:
     }
     if (pos != 0xFF)
     {
-      Serial.println("found screen");
       selectedScreenIndex = pos;
       char str[14];
       screens[selectedScreenIndex].render(str, 14);
