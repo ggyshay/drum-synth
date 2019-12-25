@@ -28,7 +28,6 @@ public:
     values.push_back(indexValue);
 
     setupParams();
-    outMixer.gain(0, 7);
     decayTime = _decay;
 
     patch1 = new AudioConnection(sq1, 0, mixer1, 0);
@@ -43,7 +42,7 @@ public:
     patch11 = new AudioConnection(filter, 0, ampAM, 0);
     patch12 = new AudioConnection(ampEnv, 0, ampAM, 1);
     patch14 = new AudioConnection(ampAM, 0, outMixer, 0);
-    patch15 = new AudioConnection(wav, 0, outMixer, 1);
+    patch15 = new AudioConnection(sampler, 0, outMixer, 1);
   }
 
   void noteOn(byte velocity)
@@ -54,14 +53,9 @@ public:
     {
       ampEnv.noteOn();
     }
-    else if (floor(values[6].value) == 1)
-    {
-      //        wav.play(fileName.c_str());
-      // wav.play(AudioSampleHat1);
-    }
     else
     {
-      // wav.play(AudioSampleHat2);
+      sampler.play(fileName);
     }
   }
 
@@ -78,9 +72,7 @@ public:
     sq6.begin(1, values[0].value * 8.21, WAVEFORM_SQUARE);
     noise.amplitude(values[4].value);
 
-    // fileName = "HAT";
-    // fileName += (int)floor(values[6].value);
-    // fileName += ".WAV";
+    snprintf(fileName, 9, "HAT%d.RAW", (int)values[6].value);
   }
 
   //    AudioMixer4      outMixer;
@@ -104,7 +96,7 @@ private:
   AudioFilterBiquad filter;
   Envelope ampEnv;
   AudioEffectMultiply ampAM;
-  AudioPlayMemory wav;
+  AudioPlaySerialflashRaw sampler;
 
   AudioConnection *patch1;
   AudioConnection *patch2;
@@ -115,10 +107,8 @@ private:
   AudioConnection *patch7;
   AudioConnection *patch8;
   AudioConnection *patch9;
-  //    AudioConnection*    patch10;
   AudioConnection *patch11;
   AudioConnection *patch12;
-  //    AudioConnection*    patch13;
   AudioConnection *patch14;
   AudioConnection *patch15;
   byte index = 0;

@@ -89,8 +89,6 @@ void DisplayDriver::putScreen(const char *str1, const char *str2)
 {
   strcpy(nextStrings[0], str1);
   strcpy(nextStrings[1], str2);
-  //  nextStrings[1] = str2;
-  //  nextStrings[0] = str1;
   triggerTransmission();
 }
 
@@ -99,7 +97,6 @@ void DisplayDriver::putScreen(const char *str1, float str2)
   char f[9];
   snprintf(f, 9, "%.2f", str2);
   strcpy(nextStrings[0], str1);
-  // String s(str2);
   strcpy(nextStrings[1], f);
   triggerTransmission();
 }

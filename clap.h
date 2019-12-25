@@ -22,22 +22,24 @@ public:
     values.push_back(indexValue);
 
     setupParams();
+    outMixer.gain(0, 2.78612116862977);
 
     patch1 = new AudioConnection(noise, BPF);
 
     patch2 = new AudioConnection(BPF, 0, AM1, 0);
     patch3 = new AudioConnection(env1, 0, AM1, 1);
-    patch4 = new AudioConnection(AM1, 0, outMixer, 0);
+    patch4 = new AudioConnection(AM1, 0, intermediateMixer, 0);
 
     patch5 = new AudioConnection(BPF, 0, AM2, 0);
     patch6 = new AudioConnection(env2, 0, AM2, 1);
-    patch7 = new AudioConnection(AM2, 0, outMixer, 1);
+    patch7 = new AudioConnection(AM2, 0, intermediateMixer, 1);
 
     patch8 = new AudioConnection(BPF, 0, AM3, 0);
     patch9 = new AudioConnection(env3, 0, AM3, 1);
-    patch10 = new AudioConnection(AM3, 0, outMixer, 2);
+    patch10 = new AudioConnection(AM3, 0, intermediateMixer, 2);
 
-    patch11 = new AudioConnection(wav, 0, outMixer, 3);
+    patch11 = new AudioConnection(sampler, 0, outMixer, 1);
+    patch12 = new AudioConnection(intermediateMixer, 0, outMixer, 1);
   }
   void noteOn(byte velocity)
   {
@@ -50,7 +52,7 @@ public:
     }
     else
     {
-      wav.play(fileName);
+      sampler.play(fileName);
     }
   }
 
@@ -76,7 +78,8 @@ private:
   EnvelopeWithDelay env2;
   EnvelopeWithDelay env3;
   byte index = 0;
-  AudioPlaySerialflashRaw wav;
+  AudioMixer4 intermediateMixer;
+  AudioPlaySerialflashRaw sampler;
   AudioEffectMultiply AM1;
   AudioEffectMultiply AM2;
   AudioEffectMultiply AM3;
@@ -93,4 +96,5 @@ private:
   AudioConnection *patch9;
   AudioConnection *patch10;
   AudioConnection *patch11;
+  AudioConnection *patch12;
 };

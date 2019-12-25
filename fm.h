@@ -29,6 +29,7 @@ public:
     values.push_back(indexValue);
 
     setupParams();
+    outMixer.gain(0, 4.57088); // gain correction
     patch1 = new AudioConnection(osc1, 0, AM1, 0);
     patch2 = new AudioConnection(env1, 0, AM1, 1);
     patch3 = new AudioConnection(AM1, 0, fmMixer, 0);
@@ -37,7 +38,7 @@ public:
     patch6 = new AudioConnection(env2, 0, AM2, 1);
     patch7 = new AudioConnection(AM2, 0, fmMixer, 1);
     patch8 = new AudioConnection(AM2, 0, outMixer, 0);
-    patch9 = new AudioConnection(wav, 0, outMixer, 1);
+    patch9 = new AudioConnection(sampler, 0, outMixer, 1);
   }
 
   void noteOn(byte velocity)
@@ -53,7 +54,7 @@ public:
     }
     else
     {
-      // wav.play(fileName.c_str());
+      sampler.play(fileName);
     }
   }
 
@@ -66,9 +67,7 @@ public:
     fmMixer.gain(1, values[4].value);
     fmMixer.gain(0, values[5].value);
 
-    // fileName = "FM";
-    // fileName += (int)floor(values[6].value);
-    // fileName += ".WAV";
+    snprintf(fileName, 8, "FM%d.RAW", (int)values[6].value);
   }
 
   float frequency1 = 100;
@@ -78,7 +77,6 @@ public:
   float feedbackAmount = 0.0;
   float modAmount = 0.0;
 
-  //    AudioMixer4     outMixer;
 private:
   AudioSynthWaveformSine osc1;
   AudioSynthWaveformSineModulated osc2;
@@ -87,7 +85,7 @@ private:
   Envelope env2;
   AudioEffectMultiply AM1;
   AudioEffectMultiply AM2;
-  AudioPlaySdWav wav;
+  AudioPlaySerialflashRaw sampler;
   byte index = 0;
   AudioConnection *patch1;
   AudioConnection *patch2;

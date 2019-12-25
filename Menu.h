@@ -141,7 +141,7 @@ public:
     Screen clockBPMScreen("BPM");
     clockBPMScreen.parameter = new Value(60.0, 220.0, 120.0, "", 160);
     clockBPMScreen.onClick = [clockBPMScreen]() -> const char * {
-      // audioInfra->setClock(clockBPMScreen.parameter->value);
+      audioInfra->setClock((int) clockBPMScreen.parameter->value);
       return "INT CLOCK";
     };
 

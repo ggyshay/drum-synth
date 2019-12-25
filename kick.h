@@ -30,6 +30,7 @@ public:
     values.push_back(indexValue);
 
     setupParams();
+    outMixer.gain(0, 1.06291782124); // gain correction
 
     patch1 = new AudioConnection(pitchEnv, sine);
     patch2 = new AudioConnection(sine, 0, sineAM, 0);
@@ -40,7 +41,7 @@ public:
     patch7 = new AudioConnection(noiseAM, 0, noiseMixer, 0);
     patch8 = new AudioConnection(sineAM, 0, noiseMixer, 1);
     patch9 = new AudioConnection(filter, 0, outMixer, 0);
-    patch9 = new AudioConnection(wav, 0, outMixer, 1);
+    patch9 = new AudioConnection(sampler, 0, outMixer, 1);
   }
 
   void noteOn(byte velocity)
@@ -55,7 +56,7 @@ public:
     }
     else
     {
-      wav.play(fileName);
+      sampler.play(fileName);
     }
   }
 
@@ -90,7 +91,7 @@ private:
   AudioEffectMultiply sineAM;
   AudioEffectMultiply noiseAM;
   AudioMixer4 noiseMixer;
-  AudioPlaySerialflashRaw wav;
+  AudioPlaySerialflashRaw sampler;
 
   AudioConnection *patch0;
   AudioConnection *patch1;

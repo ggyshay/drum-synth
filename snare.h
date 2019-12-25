@@ -20,23 +20,26 @@ public:
     Value indexValue(0, 2, 0, "INDICE", 2);
     values.push_back(indexValue);
     setupParams();
+    outMixer.gain(0, 1.3152248321922384); // gain correction
 
     patch1 = new AudioConnection(bodyPitchEnv, sine);
     patch2 = new AudioConnection(sine, 0, bodyAM, 0);
     patch3 = new AudioConnection(bodyAmpEnv, 0, bodyAM, 1);
-    patch4 = new AudioConnection(bodyAM, 0, outMixer, 0);
+    patch4 = new AudioConnection(bodyAM, 0, intermediateMixer, 0);
 
     patch5 = new AudioConnection(snapNoise, 0, snapAM, 0);
     patch6 = new AudioConnection(snapEnv, 0, snapAM, 1);
     patch7 = new AudioConnection(snapAM, snapLPF);
-    patch8 = new AudioConnection(snapLPF, 0, outMixer, 1);
+    patch8 = new AudioConnection(snapLPF, 0, intermediateMixer, 1);
 
     patch9 = new AudioConnection(sizzleNoise, 0, sizzleFilter, 0);
     patch10 = new AudioConnection(sizzleEnv, 0, sizzleFilter, 1);
     patch11 = new AudioConnection(sizzleEnv, 0, sizzleAM, 0);
     patch12 = new AudioConnection(sizzleFilter, 0, sizzleAM, 1);
-    patch13 = new AudioConnection(sizzleAM, 0, outMixer, 2);
-    patch14 = new AudioConnection(wav, 0, outMixer, 3);
+    patch13 = new AudioConnection(sizzleAM, 0, intermediateMixer, 2);
+
+    patch14 = new AudioConnection(sampler, 0, outMixer, 1);
+    patch15 = new AudioConnection(intermediateMixer, 0, outMixer, 0);
   }
 
   void noteOn(byte velocity)
@@ -51,8 +54,7 @@ public:
     }
     else
     {
-      //        wav.play(fileName.c_str());
-      // wav.play(AudioSampleSnare1);
+      sampler.play(fileName);
     }
   }
 
@@ -73,9 +75,7 @@ public:
     sizzleFilter.resonance(0.3);
     sizzleEnv.setCoefficients(values[1].value, 0.001, values[0].value);
 
-    // fileName = "SNARE";
-    // fileName += (int)floor(values[3].value);
-    // fileName += ".WAV";
+    snprintf(fileName, 11, "SNARE%d.RAW", (int)values[3].value);
   }
 
 private:
@@ -83,6 +83,7 @@ private:
   byte index = 0;
 
   AudioSynthWaveformSineModulated sine;
+  AudioMixer4 intermediateMixer;
   Envelope bodyPitchEnv;
   Envelope bodyAmpEnv;
   AudioEffectMultiply bodyAM;
@@ -94,7 +95,7 @@ private:
   Envelope sizzleEnv;
   AudioFilterStateVariable sizzleFilter;
   AudioEffectMultiply sizzleAM;
-  AudioPlayMemory wav;
+  AudioPlaySerialflashRaw sampler;
 
   AudioConnection *patch1;
   AudioConnection *patch2;
@@ -110,4 +111,5 @@ private:
   AudioConnection *patch12;
   AudioConnection *patch13;
   AudioConnection *patch14;
+  AudioConnection *patch15;
 };

@@ -61,8 +61,6 @@ AudioConnection *patchCord11;
 void setup()
 {
   Serial.begin(4608000U);
-  while (!Serial)
-    ;
   Serial.println("serial is up");
   audioInfra->setup();
   audioInfra->saveAudioState = &saveState;
@@ -78,6 +76,15 @@ void setup()
   instruments[5] = new FM();
   instruments[6] = new FM();
   instruments[7] = new FM();
+
+  audioInfra->output1.gain(0, 0.74498524052);      // Kick gain correction
+  audioInfra->output1.gain(1, 1.53108746168);      // CH gain correction
+  audioInfra->output1.gain(2, 1.53108746168);      // OH gain correction
+  audioInfra->output1.gain(3, 0.73875426299);      // Snare gain correction
+  audioInfra->output2.gain(0, 2.40713251905);      // Clap gain correction
+  audioInfra->output2.gain(1, 0.8881779763192479); // FM gain correction
+  audioInfra->output2.gain(2, 0.8881779763192479); // FM gain correction
+  audioInfra->output2.gain(3, 0.8881779763192479); // FM gain correction
 
   patchCord1 = new AudioConnection(instruments[0]->s_out, 0, audioInfra->output1, 0);
   patchCord2 = new AudioConnection(instruments[1]->s_out, 0, audioInfra->output1, 1);
@@ -118,6 +125,8 @@ void setup()
   usbMIDI.setHandleStop(sendMidiStop);
 
   Serial.println("general setup finished");
+  delay(100);
+  disp.putScreen("ARA ARA ARA A", "RA ARA ARA AR");
 }
 
 void loop()
