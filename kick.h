@@ -26,7 +26,7 @@ public:
     Value cutoffValue(30.0, 4000.0, 440.0, "FILTRO", 100, true); // 5
     values.push_back(cutoffValue);
 
-    Value indexValue(0, 2, 0, "INDICE", 2); // 6
+    Value indexValue(0, 4, 0, "INDICE", 4); // 6
     values.push_back(indexValue);
 
     setupParams();

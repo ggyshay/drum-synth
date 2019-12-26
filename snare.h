@@ -17,7 +17,7 @@ public:
     Value sizzleFrequencyValue(500, 7000.0, 1500.0f, "TOM", 100, true);
     values.push_back(sizzleFrequencyValue);
 
-    Value indexValue(0, 2, 0, "INDICE", 2);
+    Value indexValue(0, 4, 0, "INDICE", 4);
     values.push_back(indexValue);
     setupParams();
     outMixer.gain(0, 1.3152248321922384); // gain correction

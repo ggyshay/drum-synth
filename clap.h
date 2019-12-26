@@ -18,7 +18,7 @@ public:
     Value trainIntervalValue(2.0, 100.0, 11.0, "INTERVALO");
     values.push_back(trainIntervalValue);
 
-    Value indexValue(0, 2, 0, "INDICE", 2);
+    Value indexValue(0, 4, 0, "INDICE", 4);
     values.push_back(indexValue);
 
     setupParams();

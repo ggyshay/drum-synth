@@ -25,7 +25,7 @@ public:
     Value modulationValue(0, 20.0, 0.5, "MODULACAO");
     values.push_back(modulationValue);
 
-    Value indexValue(0, 6, 0, "INDICE", 6);
+    Value indexValue(0, 8, 0, "INDICE", 8
     values.push_back(indexValue);
 
     setupParams();

@@ -24,7 +24,7 @@ public:
     Value attackValue(2.0, 100.0, 2.0, "ATAQUE", 98, true);
     values.push_back(attackValue);
 
-    Value indexValue(0, 4, 0, "INDICE", 4);
+    Value indexValue(0, 8, 0, "INDICE", 8);
     values.push_back(indexValue);
 
     setupParams();
