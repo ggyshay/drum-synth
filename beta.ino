@@ -13,21 +13,21 @@
 #include "SerialTransfer.h"
 namespace std
 {
-void __throw_bad_alloc()
-{
-  Serial.println("Unable to allocate memory");
-}
+  void __throw_bad_alloc()
+  {
+    Serial.println("Unable to allocate memory");
+  }
 
-void __throw_length_error(char const *e)
-{
-  Serial.print("Length Error :");
-  Serial.println(e);
-}
+  void __throw_length_error(char const *e)
+  {
+    Serial.print("Length Error :");
+    Serial.println(e);
+  }
 
-void __throw_bad_function_call()
-{
-  Serial.println("Bad function call!");
-}
+  void __throw_bad_function_call()
+  {
+    Serial.println("Bad function call!");
+  }
 } // namespace std
 
 #define A_PORT 26
